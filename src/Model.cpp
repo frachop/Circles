@@ -1,5 +1,7 @@
 #include "Model.hpp"
 
+//- Internal constants ///////////////////////////////////////////////////////////////////////////////////////////
+
 constexpr qreal k_defaultBorderWidth{3.f};
 static const QColor k_defaultBorderColor{"#073642"};
 static const std::vector<QString> k_colorSet {
@@ -12,6 +14,8 @@ static const std::vector<QString> k_colorSet {
 	"#2aa198",
 	"#859900"
 };
+
+//- Static function tools ///////////////////////////////////////////////////////////////////////////////////////////
 
 // random number between 0 and 1
 template<typename T>
@@ -109,7 +113,8 @@ void CCircles::selectAll()
 	std::for_each(_circles.begin(), _circles.end(), [&](CCirclePointer p) {
 		_selection[p.get()] = p;
 	});
-
+	
+	// emit only if selection actually changed
 	if (previousCount != selectedCount())
 		emit selectionChanged();
 }
@@ -119,11 +124,11 @@ void CCircles::selDelete()
 	if (_selection.empty())
 		return;
 
-	// 1. save selection and Clear selection
+	// First save selection so we can Clear it
 	auto sel = _selection;
 	selClear();
 
-	// For each selected circle
+	// For each circle that was selected
 	std::for_each(sel.begin(),sel.end(), [&](std::pair<CCircle *, CCirclePointer> pair) {
 	
 		auto it = std::find_if(_circles.begin(), _circles.end(), [&pair](CCirclePointer c) {

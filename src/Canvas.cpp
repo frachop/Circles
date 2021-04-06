@@ -3,6 +3,9 @@
 CCanvas::CCanvas(QWidget * pParent)
 :	QWidget{pParent}
 {
+	// schedule a repaint event when something changed in circles.
+	// In real production project one should update only "dirty" region to
+	// optimize drawing/refreshing
 	connect( &circles(), SIGNAL(cleared()), this, SLOT(update()) );
 	connect( &circles(), SIGNAL(circleCreated(CCirclePointer)), this, SLOT(update()) );
 	connect( &circles(), SIGNAL(selectionChanged()), this, SLOT(update()) );
@@ -11,14 +14,14 @@ CCanvas::CCanvas(QWidget * pParent)
 
 void CCanvas::mousePressEvent(QMouseEvent *event)
 {
+	// Create or Select a circle
 	auto c = circles().lastFromPoint(event->pos());
 	if (c)
 	{
+		// Select add if Shift pressed
 		bool const shiftPressed = (QApplication::queryKeyboardModifiers() & Qt::ShiftModifier);
 		if (shiftPressed)
-		{
 			circles().selectAdd(c);
-		}
 		else
 			circles().selectSet(c);
 	}
@@ -33,11 +36,12 @@ void CCanvas::resizeEvent(QResizeEvent *event)
 
 void CCanvas::draw( QPainter & p, CCirclePointer pCircle)
 {
+	// Draw a single Circle
+
 	if (pCircle.get() == nullptr)
 		return;
 
 	const CCircle & c = *(pCircle.get());
-
 	p.setPen(QPen(QBrush(c.borderColor()), c.borderWidth()));
 	p.setBrush(QBrush(c.fillColor()));
 	
@@ -68,7 +72,10 @@ void CCanvas::paintEvent(QPaintEvent *)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
 	
 	painter.resetTransform();
-	
+
+	// In real production project one should redraw only "dirty" region to
+	// optimize drawing/refreshing
+
 	CCircleList const all = circles().all();
 	std::for_each(all.begin(), all.end(), [&](CCirclePointer c)
 	{

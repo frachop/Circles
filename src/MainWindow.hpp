@@ -11,12 +11,14 @@ class CMainWindow
 
 public:
 	CMainWindow();
-	virtual ~CMainWindow();
+	~CMainWindow();
 
 private slots:
+	// updating status bar text
 	void updateSB();
 
 private:
 	class CUi;
-	CUi* _ui;
+	// QScopedPointer or std::unique_ptr
+	QScopedPointer<CUi> _ui;
 };

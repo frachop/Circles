@@ -10,6 +10,7 @@ class CControls
 
 public:
 	CControls(QWidget * pParent);
+	~CControls();
 
 private slots:
 	void onCanvasResize(QSize);
@@ -27,6 +28,7 @@ private:
 
 private:
 	class CUi;
-	CUi* _ui;
+	// QScopedPointer or std::unique_ptr
+	QScopedPointer<CUi> _ui;
 	QSize _canvasSize;
 };

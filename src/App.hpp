@@ -9,7 +9,6 @@ class CApplication
 
 public:
 	CApplication(int & argc, char**argv);
-	virtual ~CApplication();
 
 private:
 	QScopedPointer<CMainWindow> _pMainWindow;

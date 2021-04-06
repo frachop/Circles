@@ -8,15 +8,27 @@ class CControls::CUi
 
 CControls::CControls(QWidget * pParent)
 :	QWidget{pParent}
-,	_ui(new CUi)
+,	_ui{new CUi}
 ,	_canvasSize{300,400}
 {
 	_ui->setupUi(this);
+	
+		// --- enable Buttons ---
 	connect( &circles(), SIGNAL(cleared()), this, SLOT(enableButtons()) );
-	connect( &circles(), SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()) );
 	connect( &circles(), SIGNAL(circleCreated(CCirclePointer )), this, SLOT(enableButtons()) );
 	connect( &circles(), SIGNAL(circleRemoved(CCirclePointer)), this, SLOT(enableButtons()) );
 
+	// --- Buttons actions ---
+	connect( _ui->_btnReset, SIGNAL(pressed()), &circles(), SLOT(clear()));
+	connect( _ui->_btnClearSelection, SIGNAL(pressed()), &circles(), SLOT(selClear()));
+	connect( _ui->_btnRemoveSelected, SIGNAL(pressed()), &circles(), SLOT(selDelete()));
+	connect( _ui->_btnCreate10Circles, SIGNAL(pressed()), this, SLOT(createRandoms()));
+	connect( _ui->_btnSelectAll, SIGNAL(pressed()), &circles(), SLOT(selectAll()));
+
+	// --- Update interface when selection changed ---
+	connect( &circles(), SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()) );
+
+	// --- RGBA sliders ---
 	connect( _ui->_rFillColorSlider, SIGNAL(sliderMoved(int)), this, SLOT(rFillColorSliderMoved(int)));
 	connect( _ui->_gFillColorSlider, SIGNAL(sliderMoved(int)), this, SLOT(gFillColorSliderMoved(int)));
 	connect( _ui->_bFillColorSlider, SIGNAL(sliderMoved(int)), this, SLOT(bFillColorSliderMoved(int)));
@@ -26,18 +38,16 @@ CControls::CControls(QWidget * pParent)
 	connect( _ui->_bFillColorSlider, SIGNAL(valueChanged(int)), this, SLOT(bFillColorSliderMoved(int)));
 	connect( _ui->_aFillColorSlider, SIGNAL(valueChanged(int)), this, SLOT(aFillColorSliderMoved(int)));
 
+	// --- Radius sliders ---
 	_ui->_radiusSlider->setRange(k_radiusMin, k_radiusMax);
 	connect( _ui->_radiusSlider, SIGNAL(sliderMoved(int)), this, SLOT(radiusSliderMoved(int)));
 	connect( _ui->_radiusSlider, SIGNAL(valueChanged(int)), this, SLOT(radiusSliderMoved(int)));
 
-	connect( _ui->_btnReset, SIGNAL(pressed()), &circles(), SLOT(clear()));
-	connect( _ui->_btnClearSelection, SIGNAL(pressed()), &circles(), SLOT(selClear()));
-	connect( _ui->_btnRemoveSelected, SIGNAL(pressed()), &circles(), SLOT(selDelete()));
-	connect( _ui->_btnCreate10Circles, SIGNAL(pressed()), this, SLOT(createRandoms()));
-	connect( _ui->_btnSelectAll, SIGNAL(pressed()), &circles(), SLOT(selectAll()));
-
 	onSelectionChanged();
 }
+
+CControls::~CControls()
+{}
 
 void CControls::onCanvasResize(QSize s)
 {
@@ -54,6 +64,8 @@ void CControls::enableButtons( )
 }
 
 static void setSliderValue( QSlider * s, int v) {
+
+	// We need to block sliders signal when updating value !
 	s->blockSignals(true);
 	s->setValue(v);
 	s->blockSignals(false);
@@ -68,6 +80,10 @@ void CControls::onSelectionChanged( )
 	_ui->_aFillColorSlider->setEnabled(enabled);
 	_ui->_radiusSlider->setEnabled(enabled);
 	if (enabled) {
+	
+		// When multiple circles are selected,
+		// UI reflect average value of color and radius.
+	
 		auto sel = circles().selection();
 		int r{0},g{0},b{0},a{0}, radius{0};
 		std::for_each(sel.begin(), sel.end(), [&](CCirclePointer c){
@@ -120,7 +136,6 @@ void CControls::radiusSliderMoved( int r)
 	auto const sel = circles().selection();
 	std::for_each(sel.begin(),sel.end(),[r](CCirclePointer c) { c->setRadius(r); });
 }
-
 
 void CControls::createRandoms( )
 {
