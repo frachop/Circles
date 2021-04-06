@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CMainWindow</class>
+ <widget class="QMainWindow" name="CMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1426</width>
+    <height>893</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="leftMargin">
+     <number>6</number>
+    </property>
+    <property name="topMargin">
+     <number>6</number>
+    </property>
+    <property name="rightMargin">
+     <number>6</number>
+    </property>
+    <property name="bottomMargin">
+     <number>6</number>
+    </property>
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="CCanvas" name="_canvas" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>512</width>
+         <height>256</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>512</width>
+         <height>256</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: #fdf6e3;</string>
+       </property>
+      </widget>
+      <widget class="CControls" name="_controls" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>512</width>
+         <height>256</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>256</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>512</width>
+         <height>256</height>
+        </size>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1426</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
+   </property>
+   <widget class="QMenu" name="menuCanvas">
+    <property name="title">
+     <string>Canvas</string>
+    </property>
+    <addaction name="_actReset"/>
+   </widget>
+   <addaction name="menuCanvas"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="_actReset">
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </action>
+  <action name="_actDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CCanvas</class>
+   <extends>QWidget</extends>
+   <header location="global">Canvas.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CControls</class>
+   <extends>QWidget</extends>
+   <header location="global">Controls.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
