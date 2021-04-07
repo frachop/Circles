@@ -6,10 +6,10 @@ class CCircles;
 class CCircle;
 
 // each circle is managed as shared pointer
-// So it is freed as sonn as no one needs it
+// So it is freed as soon as no one needs it
 using CCirclePointer = QSharedPointer<CCircle>;
 
-// Circles are stored in a list ans selection is returned as a list too
+// Circles are stored in a list and selection is returned as a list too
 using CCircleList = std::list<CCirclePointer>;
 
 //- /////////////////////////////////////////////////////////////////////////////////////////////////////////
